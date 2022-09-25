@@ -76,7 +76,7 @@ public final class WordleMain {
 
     private static String getKeyColor(char key) {
         for (int row = 0; row < keys.length; row++) {
-            if (Arrays.asList(charArrayToCharObjArray(keys[row])).contains(Character.valueOf(letter))) {
+            if (Arrays.asList(charArrayToCharObjArray(keys[row])).contains(Character.valueOf(key))) {
                 return keyColors[row][String.valueOf(keys[row]).indexOf(key)];
             }
         }
@@ -152,7 +152,7 @@ public final class WordleMain {
                 setKeyboardLetterColor(guessArray[character], GREEN);
             } else if (Arrays.asList(charArrayToCharObjArray(wordleArray)).contains(Character.valueOf(guessArray[character])) && !getKeyColor(guessArray[character]).equals(GREEN)) {
                 setKeyboardLetterColor(guessArray[character], YELLOW);
-            } else {
+            } else if (!getKeyColor(guessArray[character]).equals(GREEN)){
                 setKeyboardLetterColor(guessArray[character], WHITE);
             }
         }
