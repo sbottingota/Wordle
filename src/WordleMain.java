@@ -4,7 +4,8 @@ import java.util.*;
 
 public final class WordleMain {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        playGame();
     }
 
     //returns a random word from possibleWords
@@ -93,6 +94,7 @@ public final class WordleMain {
                 keyboard += keys[row][key];
             }
 
+            keyboard += RESET;
             keyboard += "\n";
         }
 
@@ -132,22 +134,40 @@ public final class WordleMain {
         System.out.println(stringArrToString(output) + RESET);
     }
 
+    private static void changeKeyboardColors(String guess, String wordle) {
+        char[] guessArray = guess.toCharArray();
+        char[] wordleArray = wordle.toCharArray();
+
+        for (int character = 0; character < guessArray.length; character++) {
+            if (guessArray[character] == wordleArray[character]) {
+                setKeyboardLetterColor(guessArray[character], GREEN);
+            } else if (Arrays.asList(charArrayToCharObjArray(wordleArray)).contains(Character.valueOf(guessArray[character]))) {
+                setKeyboardLetterColor(guessArray[character], YELLOW);
+            } else {
+                setKeyboardLetterColor(guessArray[character], WHITE);
+            }
+        }
+    }
+
     public static int playGame() throws IOException {
         String wordle = getWordle();
 
         for (int guesses = 0; guesses < 6; guesses++) {
+            System.out.println("\n");
             printKeyboard();
             String guess = getGuess();
 
             printGuessCorrectness(guess, wordle);
 
-            if (guess.toUpperCase() == wordle) {
-                System.out.println("Well done! You got it in " + (guesses + 1) + " guesses!");
+            if (guess.equalsIgnoreCase(wordle)) {
+                System.out.println("Well done! You got it in " + (guesses + 1) + " guess(es)!");
                 return guesses + 1;
             }
+
+            changeKeyboardColors(guess, wordle);
         }
 
-        System.out.println("The wordle was: " + wordle + "You failed to get it in 6 tries");
+        System.out.println("The wordle was: " + wordle + ". You failed to get it in 6 tries");
         return -1;
     }
 }
