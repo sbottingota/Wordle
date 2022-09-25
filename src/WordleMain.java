@@ -74,12 +74,21 @@ public final class WordleMain {
         return output;
     }
 
+    private static String getKeyColor(char key) {
+        for (int row = 0; row < keys.length; row++) {
+            if (Arrays.asList(charArrayToCharObjArray(keys[row])).contains(Character.valueOf(letter))) {
+                return keyColors[row][String.valueOf(keys[row]).indexOf(key)];
+            }
+        }
+        return RESET;
+    }
+
     //sets the ansiColor of a particular key on the keyboard (not guessed, not in the word, not in the right place, in the right place)
     public static void setKeyboardLetterColor(char letter, String ansiColor) {
 
         for (int row = 0; row < keys.length; row++) {
             if (Arrays.asList(charArrayToCharObjArray(keys[row])).contains(Character.valueOf(letter))) {
-                keyColors[row][new String(keys[row]).indexOf(letter)] = ansiColor;
+                keyColors[row][String.valueOf(keys[row]).indexOf(letter)] = ansiColor;
                 return;
             }
         }
@@ -141,7 +150,7 @@ public final class WordleMain {
         for (int character = 0; character < guessArray.length; character++) {
             if (guessArray[character] == wordleArray[character]) {
                 setKeyboardLetterColor(guessArray[character], GREEN);
-            } else if (Arrays.asList(charArrayToCharObjArray(wordleArray)).contains(Character.valueOf(guessArray[character]))) {
+            } else if (Arrays.asList(charArrayToCharObjArray(wordleArray)).contains(Character.valueOf(guessArray[character])) && !getKeyColor(guessArray[character]).equals(GREEN)) {
                 setKeyboardLetterColor(guessArray[character], YELLOW);
             } else {
                 setKeyboardLetterColor(guessArray[character], WHITE);
