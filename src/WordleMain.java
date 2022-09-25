@@ -4,7 +4,8 @@ import java.util.*;
 
 public final class WordleMain {
 
-    public static void main(String[] args) {}
+    public static void main(String[] args) {
+    }
 
     //returns a random word from possibleWords
     public static String getWordle() throws IOException {
@@ -62,6 +63,16 @@ public final class WordleMain {
         return output;
     }
 
+    private static String stringArrToString(String[] strings) {
+        String output = "";
+
+        for (int i = 0; i < strings.length; i++) {
+            output += strings[i];
+        }
+
+        return output;
+    }
+
     //sets the ansiColor of a particular key on the keyboard (not guessed, not in the word, not in the right place, in the right place)
     public static void setKeyboardLetterColor(char letter, String ansiColor) {
 
@@ -85,6 +96,58 @@ public final class WordleMain {
             keyboard += "\n";
         }
 
+        keyboard += RESET;
         System.out.println(keyboard);
+    }
+
+    //prints a color coded string showing you how good your guess was
+    private static void printGuessCorrectness(String guess, String wordle) {
+        char[] guessArray = guess.toCharArray();
+        char[] wordleArray = wordle.toCharArray();
+
+        String[] output = new String[guessArray.length];
+
+        //set all the chars to gray
+        for (int character = 0; character < guessArray.length; character++) {
+            output[character] = WHITE + guessArray[character];
+        }
+
+        //set the appropriate ones to yellow
+        for (int character = 0; character < guessArray.length; character++) {
+            if (Arrays.asList(charArrayToCharObjArray(wordleArray)).contains(guessArray[character])) {
+                output[character] = YELLOW + guessArray[character];
+                wordleArray[String.valueOf(wordleArray).indexOf(guessArray[character])] = ' ';
+            }
+        }
+
+        wordleArray = wordle.toCharArray();
+
+        //set the appropriate ones to green
+        for (int character = 0; character < guessArray.length; character++) {
+            if (guessArray[character] == wordleArray[character]) {
+                output[character] = GREEN + guessArray[character];
+            }
+        }
+
+        System.out.println(stringArrToString(output) + RESET);
+    }
+
+    public static int playGame() throws IOException {
+        String wordle = getWordle();
+
+        for (int guesses = 0; guesses < 6; guesses++) {
+            printKeyboard();
+            String guess = getGuess();
+
+            printGuessCorrectness(guess, wordle);
+
+            if (guess.toUpperCase() == wordle) {
+                System.out.println("Well done! You got it in " + (guesses + 1) + " guesses!");
+                return guesses + 1;
+            }
+        }
+
+        System.out.println("The wordle was: " + wordle + "You failed to get it in 6 tries");
+        return -1;
     }
 }
