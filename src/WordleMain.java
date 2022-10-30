@@ -120,29 +120,21 @@ public final class WordleMain {
 
 		String[] output = new String[guessArray.length];
 
-		// set all the chars to white
-		for (int character = 0; character < guessArray.length; character++) {
-			output[character] = WHITE + guessArray[character];
-		}
 
-		// set the appropriate ones to green
 		for (int character = 0; character < guessArray.length; character++) {
 			if (guessArray[character] == wordleArray[character]) {
 				output[character] = GREEN + guessArray[character];
+				//guessArray[character] = ' ';
 
-				wordleArray[character] = ' ';
-			}
-		}
-
-		// set the appropriate ones to yellow
-		for (int character = 0; character < guessArray.length; character++) {
-			if (Arrays.asList(charArrayToCharObjArray(wordleArray)).contains(guessArray[character])) {
+			} else if (Arrays.asList(charArrayToCharObjArray(wordleArray)).contains(
+					guessArray[character]) && !getKeyColor(guessArray[character]).equals(GREEN)) {
 				output[character] = YELLOW + guessArray[character];
-				wordleArray[String.valueOf(wordleArray).indexOf(guessArray[character])] = ' ';
-			}
-		}
 
-		wordleArray = wordle.toCharArray();
+			} else if (!getKeyColor(guessArray[character]).equals(GREEN)) {
+				output[character] = WHITE + guessArray[character];
+			}
+
+		}
 
 		System.out.println(stringArrToString(output) + RESET);
 	}
